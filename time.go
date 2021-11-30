@@ -1,8 +1,6 @@
 package golabview
 
 import (
-	"fmt"
-
 	"math"
 
 	"time"
@@ -13,25 +11,6 @@ import (
 /* Labview Time Constant
 
 /**************************************************************************************************/
-
-//To do : Create a goof fomarting function to replace this
-
-//TimeRecLabview get string format
-
-const (
-	StringOfTimestamp = 0 // string of full Timestamp yyyy mm dd HH MM SS
-
-	StringOfDate = 1 // String of Date yyyy mm dd
-
-	StringOfDateHour = 2 // String of Date yyyy mm dd HH
-
-	StringOfHourMinuteSecond = 3 // String of Hour and minute HH MM SS
-
-	StringOfHourMinute = 4 // String of Hour and minute HH MM
-
-	StringOfHour = 5 // String of Hour HH
-
-)
 
 const (
 	p9 = 1000000000
@@ -53,16 +32,17 @@ func (ltr *TimeRecLabview) SetTime(timeToWrite time.Time) {
 
 // UnflattenFromByteSlice TimeRecLabview
 
-func (ltr *TimeRecLabview) UnflattenFromByteSlice(SliceToRead []byte) {
+func (ltr *TimeRecLabview) UnflattenFromByteSlice(SliceToRead []byte) (restOfSlice []byte) {
 
 	var data interface{}
 
-	SliceToRead, data = UnflattenTimeRecLabview(SliceToRead)
+	restOfSlice, data = UnflattenTimeRecLabview(SliceToRead)
 
 	timeRec := data.(TimeRecLabview)
 
 	*ltr = timeRec
 
+	return restOfSlice
 }
 
 //TimeRecToTime convert Labview TimeRec to Go time
@@ -181,118 +161,6 @@ func DoubleToTime(timeToConvert float64) (timeGo time.Time) {
 	timeGo = labviewTime.Add(time.Nanosecond * time.Duration(timeToConvert*p9))
 
 	return timeGo
-
-}
-
-// GetString get string from TimeRecLabview
-
-func (ltr *TimeRecLabview) GetString(formatTime int) string {
-
-	var stringToReturn string
-
-	switch formatTime {
-
-	default:
-
-		stringToReturn = fmt.Sprintf("%04d_%02d_%02d_%02d_%02d_%02d", ltr.Year, ltr.Month, ltr.DayOfMonth, ltr.Hour, ltr.Minute, ltr.Second)
-
-	case StringOfDate:
-
-		stringToReturn = fmt.Sprintf("%04d_%02d_%02d", ltr.Year, ltr.Month, ltr.DayOfMonth)
-
-	case StringOfDateHour:
-
-		stringToReturn = fmt.Sprintf("%04d_%02d_%02d_%02d", ltr.Year, ltr.Month, ltr.DayOfMonth, ltr.Hour)
-
-	case StringOfHourMinuteSecond:
-
-		stringToReturn = fmt.Sprintf("%04d_%02d_%02d", ltr.Hour, ltr.Minute, ltr.Second)
-
-	case StringOfHourMinute:
-
-		stringToReturn = fmt.Sprintf("%02d_%02d", ltr.Hour, ltr.Minute)
-
-	case StringOfHour:
-
-		stringToReturn = fmt.Sprintf("%02d", ltr.Hour)
-
-	}
-
-	return stringToReturn
-
-}
-
-// SetFromString get string from TimeRecLabview
-
-func (ltr *TimeRecLabview) SetFromString(timeString string, formatTime int) bool {
-
-	var err error
-
-	success := true
-
-	switch formatTime {
-
-	default:
-
-		_, err = fmt.Sscanf(timeString, "%04d_%02d_%04d_%02d_%02d_%02d", ltr.Year, ltr.Month, ltr.DayOfMonth, ltr.Hour, ltr.Minute, ltr.Second)
-
-	case StringOfDate:
-
-		_, err = fmt.Sscanf(timeString, "%04d_%02d_%02d", ltr.Year, ltr.Month, ltr.DayOfMonth)
-
-	case StringOfDateHour:
-
-		_, err = fmt.Sscanf(timeString, "%04d_%02d_%02d_02d", ltr.Year, ltr.Month, ltr.DayOfMonth, ltr.Hour)
-
-	case StringOfHourMinuteSecond:
-
-		_, err = fmt.Sscanf(timeString, "%04d_%02d_%02d", ltr.Hour, ltr.Minute, ltr.Second)
-
-	case StringOfHourMinute:
-
-		_, err = fmt.Sscanf(timeString, "%02d_%02d", ltr.Hour, ltr.Minute)
-
-	case StringOfHour:
-
-		_, err = fmt.Sscanf(timeString, "%02d", ltr.Hour)
-
-	}
-
-	if err != nil {
-
-		success = false
-
-	}
-
-	return success
-
-}
-
-//TestTimeConversion check conversion function
-
-func TestTimeConversion() {
-
-	//01.05.2020 - 08:12:45.01234579
-
-	timestampDoubleTest := 3671165565.01234579
-
-	timestampTime := DoubleToTime(timestampDoubleTest)
-
-	timestampTimeRec := TimeToTimeRec(timestampTime)
-
-	timestampDouble := TimeRecToDouble(timestampTimeRec)
-
-	timestampTimeRec2 := DoubleToTimeRec(timestampDouble)
-
-	timestampTime2 := TimeRecToTime(timestampTimeRec2)
-
-	timestampDouble2 := TimeToDouble(timestampTime2)
-
-	if timestampDouble2 == timestampDoubleTest { // should use a tolerance but it's work on compuer, on target too?
-
-	} else {
-
-	}
 
 }
 
