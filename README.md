@@ -5,7 +5,7 @@ This module is a bridge between LabVIEW and Golang.
 
 # Functions 
 
-# Flatten / Unflatten 
+## Flatten / Unflatten 
 This module provide a solution to flatten and unflatten data from and to LabVIEW from a Golang project.
 For the moment it is a manual method. An improvement could be to use the reflection.
 
@@ -54,7 +54,7 @@ func (cal Calibration) FlattenToByteSlice(sliceToWrite []byte) int {
 
 ```
 
-# Time conversion
+## Time conversion
 
 This module provide a solution to convert Golant Time and LabView Time.
 
