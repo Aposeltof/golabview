@@ -1,18 +1,12 @@
-package  golabview
-
-
+package golabview
 
 import (
-
 	"fmt"
 
 	"math"
 
 	"time"
-
 )
-
-
 
 /**************************************************************************************************/
 
@@ -20,44 +14,34 @@ import (
 
 /**************************************************************************************************/
 
-
 //To do : Create a goof fomarting function to replace this
 
 //TimeRecLabview get string format
 
 const (
+	StringOfTimestamp = 0 // string of full Timestamp yyyy mm dd HH MM SS
 
-	StringOfTimestamp        = 0 // string of full Timestamp yyyy mm dd HH MM SS
+	StringOfDate = 1 // String of Date yyyy mm dd
 
-	StringOfDate             = 1 // String of Date yyyy mm dd
-
-	StringOfDateHour         = 2 // String of Date yyyy mm dd HH
+	StringOfDateHour = 2 // String of Date yyyy mm dd HH
 
 	StringOfHourMinuteSecond = 3 // String of Hour and minute HH MM SS
 
-	StringOfHourMinute       = 4 // String of Hour and minute HH MM
+	StringOfHourMinute = 4 // String of Hour and minute HH MM
 
-	StringOfHour             = 5 // String of Hour HH
+	StringOfHour = 5 // String of Hour HH
 
 )
-
-
 
 const (
-
 	p9 = 1000000000
-
 )
-
-
 
 /**************************************************************************************************/
 
 /* Labview Time External Function
 
 /**************************************************************************************************/
-
-
 
 // SetTime of Go time to Labview TimeRec
 
@@ -66,8 +50,6 @@ func (ltr *TimeRecLabview) SetTime(timeToWrite time.Time) {
 	*ltr = TimeToTimeRec(timeToWrite)
 
 }
-
-
 
 // UnflattenFromByteSlice TimeRecLabview
 
@@ -82,8 +64,6 @@ func (ltr *TimeRecLabview) UnflattenFromByteSlice(SliceToRead []byte) {
 	*ltr = timeRec
 
 }
-
-
 
 //TimeRecToTime convert Labview TimeRec to Go time
 
@@ -106,16 +86,11 @@ func TimeRecToTime(TimeRec TimeRecLabview) (timeGo time.Time) {
 		int(TimeRec.FractionalSecond*p9),
 
 		time.FixedZone("UTC", 0),
-
 	)
-
-
 
 	return timeGo
 
 }
-
-
 
 //TimeRecToDouble convert Labview TimeRec to Labview double timestamp
 
@@ -126,8 +101,6 @@ func TimeRecToDouble(TimeRec TimeRecLabview) float64 {
 	return TimeToDouble(timetoConvert)
 
 }
-
-
 
 //TimeToTimeRec convert Go time to Labview TimeRec
 
@@ -153,13 +126,9 @@ func TimeToTimeRec(timeToConvert time.Time) (TimeRec TimeRecLabview) {
 
 	TimeRec.Dst = 0
 
-
-
 	return TimeRec
 
 }
-
-
 
 //TimeToTimeStampLabview convert Go time to Labview Timestamp
 
@@ -177,13 +146,9 @@ func TimeToTimeStampLabview(timeToConvert time.Time) (TimeToTimeStampLabview Tim
 
 	TimeToTimeStampLabview.Second = int64(second)
 
-
-
 	return TimeToTimeStampLabview
 
 }
-
-
 
 //TimeToDouble convert Go time to Labview double Timestamp
 
@@ -197,8 +162,6 @@ func TimeToDouble(timeToConvert time.Time) float64 {
 
 }
 
-
-
 //DoubleToTimeRec Convert Labviewdouble Timestamp to Labview TimeRec
 
 func DoubleToTimeRec(timeToConvert float64) (TimeRec TimeRecLabview) {
@@ -208,8 +171,6 @@ func DoubleToTimeRec(timeToConvert float64) (TimeRec TimeRecLabview) {
 	return TimeRec
 
 }
-
-
 
 //DoubleToTime Convert Labview double Timestamp to go Time
 
@@ -223,15 +184,11 @@ func DoubleToTime(timeToConvert float64) (timeGo time.Time) {
 
 }
 
-
-
 // GetString get string from TimeRecLabview
 
 func (ltr *TimeRecLabview) GetString(formatTime int) string {
 
 	var stringToReturn string
-
-
 
 	switch formatTime {
 
@@ -261,21 +218,15 @@ func (ltr *TimeRecLabview) GetString(formatTime int) string {
 
 	}
 
-
-
 	return stringToReturn
 
 }
-
-
 
 // SetFromString get string from TimeRecLabview
 
 func (ltr *TimeRecLabview) SetFromString(timeString string, formatTime int) bool {
 
 	var err error
-
-
 
 	success := true
 
@@ -317,59 +268,33 @@ func (ltr *TimeRecLabview) SetFromString(timeString string, formatTime int) bool
 
 }
 
-
-
 //TestTimeConversion check conversion function
 
 func TestTimeConversion() {
 
 	//01.05.2020 - 08:12:45.01234579
 
-
-
 	timestampDoubleTest := 3671165565.01234579
-
-
 
 	timestampTime := DoubleToTime(timestampDoubleTest)
 
-
-
 	timestampTimeRec := TimeToTimeRec(timestampTime)
-
-
 
 	timestampDouble := TimeRecToDouble(timestampTimeRec)
 
-
-
 	timestampTimeRec2 := DoubleToTimeRec(timestampDouble)
-
-
 
 	timestampTime2 := TimeRecToTime(timestampTimeRec2)
 
-
-
 	timestampDouble2 := TimeToDouble(timestampTime2)
-
-
 
 	if timestampDouble2 == timestampDoubleTest { // should use a tolerance but it's work on compuer, on target too?
 
-
-
 	} else {
-
-
 
 	}
 
-
-
 }
-
-
 
 /**************************************************************************************************/
 
@@ -377,55 +302,43 @@ func TestTimeConversion() {
 
 /**************************************************************************************************/
 
-
-
 //TimeRecLabview Labview TimeStamp
 
 type TimeRecLabview struct {
-
 	FractionalSecond float64 `json:"fractional second"`
 
-	Second           int32   `json:"second"`
+	Second int32 `json:"second"`
 
-	Minute           int32   `json:"minute"`
+	Minute int32 `json:"minute"`
 
-	Hour             int32   `json:"hour"`
+	Hour int32 `json:"hour"`
 
-	DayOfMonth       int32   `json:"day of month"`
+	DayOfMonth int32 `json:"day of month"`
 
-	Month            int32   `json:"month"`
+	Month int32 `json:"month"`
 
-	Year             int32   `json:"year"`
+	Year int32 `json:"year"`
 
-	DayOfWeek        int32   `json:"day of week"`
+	DayOfWeek int32 `json:"day of week"`
 
-	DayOfYear        int32   `json:"day of year"`
+	DayOfYear int32 `json:"day of year"`
 
-	Dst              int32   `json:"DST"`
-
+	Dst int32 `json:"DST"`
 }
-
-
 
 //TimeStampLabview struct
 
 type TimeStampLabview struct {
-
-	Second   int64
+	Second int64
 
 	Fraction uint64
-
 }
-
-
 
 /**************************************************************************************************/
 
 /* Labview Time Struct Flatten & UnFlatten
 
 /**************************************************************************************************/
-
-
 
 // FlattenToByteSlice flatten TimeStamp to byte slice
 
@@ -457,69 +370,47 @@ func (ltr *TimeRecLabview) FlattenToByteSlice(dataSlice []byte) int {
 
 }
 
-
-
 //UnflattenTimeRecLabview unflatten TimeRec
 
 func UnflattenTimeRecLabview(SliceToRead []byte) (SliceReaded []byte, ltr TimeRecLabview) {
 
 	var data interface{}
 
-
-
 	SliceToRead, data = Unflatten(SliceToRead, ltr.FractionalSecond)
 
 	ltr.FractionalSecond = data.(float64)
-
-
 
 	SliceToRead, data = Unflatten(SliceToRead, ltr.Second)
 
 	ltr.Second = data.(int32)
 
-
-
 	SliceToRead, data = Unflatten(SliceToRead, ltr.Minute)
 
 	ltr.Minute = data.(int32)
-
-
 
 	SliceToRead, data = Unflatten(SliceToRead, ltr.Hour)
 
 	ltr.Hour = data.(int32)
 
-
-
 	SliceToRead, data = Unflatten(SliceToRead, ltr.DayOfMonth)
 
 	ltr.DayOfMonth = data.(int32)
-
-
 
 	SliceToRead, data = Unflatten(SliceToRead, ltr.Month)
 
 	ltr.Month = data.(int32)
 
-
-
 	SliceToRead, data = Unflatten(SliceToRead, ltr.Year)
 
 	ltr.Year = data.(int32)
-
-
 
 	SliceToRead, data = Unflatten(SliceToRead, ltr.DayOfWeek)
 
 	ltr.DayOfWeek = data.(int32)
 
-
-
 	SliceToRead, data = Unflatten(SliceToRead, ltr.DayOfYear)
 
 	ltr.DayOfYear = data.(int32)
-
-
 
 	SliceToRead, data = Unflatten(SliceToRead, ltr.Dst)
 
