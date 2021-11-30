@@ -56,7 +56,7 @@ func (cal Calibration) FlattenToByteSlice(sliceToWrite []byte) int {
 
 ## Time conversion
 
-This module provide a solution to convert Golant Time and LabView Time.
+This module provide a solution to convert Golang Time and LabView Time.
 
 Example : 
 ```
