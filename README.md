@@ -2,6 +2,7 @@
 Connect your go code with your labview code
 
 Example : 
+```
 
 /**************************************************************************************************/
 /* Calibration Struct
@@ -42,3 +43,5 @@ func (cal Calibration) FlattenToByteSlice(sliceToWrite []byte) int {
 	index += labview.Flatten(sliceToWrite[index:], cal.Date)
 	return index
 }
+
+```
