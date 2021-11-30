@@ -1,5 +1,13 @@
 # golabview
-Connect your go code with your labview code
+
+Connect your go code with your LabVIEW code ! 
+This module is a bridge between LabVIEW and Golang.
+
+# Functions 
+
+# Flatten / Unflatten 
+This module provide a solution to flatten and unflatten data from and to LabVIEW from a Golang project.
+For the moment it is a manual method. An improvement could be to use the reflection.
 
 Example : 
 ```
@@ -23,13 +31,13 @@ type Calibration struct {
 func (cal *Calibration) UnflattenFromByteSlice(SliceToRead []byte) []byte {
 	var data interface{}
 
-	SliceToRead, data = labview.Unflatten(SliceToRead, cal.CalA)
+	SliceToRead, data = golabview.Unflatten(SliceToRead, cal.CalA)
 	cal.CalA = data.([][]float32)
 
-	SliceToRead, data = labview.Unflatten(SliceToRead, cal.CalB)
+	SliceToRead, data = golabview.Unflatten(SliceToRead, cal.CalB)
 	cal.CalB = data.([][]float32)
 
-	SliceToRead, data = labview.Unflatten(SliceToRead, cal.Date)
+	SliceToRead, data = golabview.Unflatten(SliceToRead, cal.Date)
 	cal.Date = data.(float64)
 
 	return SliceToRead
@@ -38,10 +46,26 @@ func (cal *Calibration) UnflattenFromByteSlice(SliceToRead []byte) []byte {
 // FlattenToByteSlice Calibration and return writed size
 func (cal Calibration) FlattenToByteSlice(sliceToWrite []byte) int {
 	var index int
-	index += labview.Flatten(sliceToWrite[index:], cal.CalA)
-	index += labview.Flatten(sliceToWrite[index:], cal.CalB)
-	index += labview.Flatten(sliceToWrite[index:], cal.Date)
+	index += golabview.Flatten(sliceToWrite[index:], cal.CalA)
+	index += golabview.Flatten(sliceToWrite[index:], cal.CalB)
+	index += golabview.Flatten(sliceToWrite[index:], cal.Date)
 	return index
 }
+
+```
+
+# Timme conversion
+
+This module provide a solution to convert Golant Time and LabView Time.
+
+Example : 
+```
+	timestampDoubleTest := golabview.TimeToDouble(time.Now())
+	timestampTime := golabview.DoubleToTime(timestampDoubleTest)
+	timestampTimeRec := golabview.TimeToTimeRec(timestampTime)
+	timestampDouble := golabview.TimeRecToDouble(timestampTimeRec)
+	timestampTimeRec2 := golabview.DoubleToTimeRec(timestampDouble)
+	timestampTime2 := golabview.TimeRecToTime(timestampTimeRec2)
+	timestampDouble2 := golabview.TimeToDouble(timestampTime2)
 
 ```
