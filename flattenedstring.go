@@ -1,22 +1,14 @@
 package golabview
 
-
-
 import (
-
 	"math"
-
 )
-
-
 
 /**************************************************************************************************/
 
 /* Flatten To Byte Slice public function (Only Big Endian)
 
 /**************************************************************************************************/
-
-
 
 //Flatten data into slice and return the write size, 0 is error
 
@@ -160,6 +152,14 @@ func Flatten(SliceToWrite []byte, element interface{}) int {
 
 		return flattenString(SliceToWrite, data)
 
+	case []string:
+
+		return flatten1DString(SliceToWrite, data, true)
+
+	case [][]string:
+
+		return flatten2DString(SliceToWrite, data)
+
 	default:
 
 		// Unknown Type
@@ -170,15 +170,11 @@ func Flatten(SliceToWrite []byte, element interface{}) int {
 
 }
 
-
-
 /**************************************************************************************************/
 
 /* Unflatten To Byte Slice public function
 
 /**************************************************************************************************/
-
-
 
 //Unflatten data from slice and return it
 
@@ -400,6 +396,14 @@ func Unflatten(SliceToRead []byte, element interface{}) (SliceReaded []byte, ele
 
 		return unflatten1DString(SliceToRead, size)
 
+	case [][]string:
+
+		SliceToRead, row = UnflattenSize(SliceToRead)
+
+		SliceToRead, column = UnflattenSize(SliceToRead)
+
+		return unflatten2DString(SliceToRead, row, column)
+
 	default:
 
 		// Unknown Type
@@ -410,15 +414,11 @@ func Unflatten(SliceToRead []byte, element interface{}) (SliceReaded []byte, ele
 
 }
 
-
-
 /**************************************************************************************************/
 
 /* Flastten to Slice functions (Big Endian Only)
 
 /**************************************************************************************************/
-
-
 
 //FlattenSize write slice size before data slice
 
@@ -444,8 +444,6 @@ func FlattenSize(SliceToWrite []byte, element int) int {
 
 }
 
-
-
 //flattenBool flatten boolean into slice and return the write size, 0 is error
 
 func flattenBool(SliceToWrite []byte, element bool) int {
@@ -470,8 +468,6 @@ func flattenBool(SliceToWrite []byte, element bool) int {
 
 }
 
-
-
 //flattenU8 write U8 into slice and return the write size, 0 is error
 
 func flattenU8(SliceToWrite []byte, element uint8) int {
@@ -487,8 +483,6 @@ func flattenU8(SliceToWrite []byte, element uint8) int {
 	return 0
 
 }
-
-
 
 //flattenU16 write U16 into slice and return the write size, 0 is error
 
@@ -507,8 +501,6 @@ func flattenU16(SliceToWrite []byte, element uint16) int {
 	return 0
 
 }
-
-
 
 //flattenU32 write U32 into slice and return the write size, 0 is error
 
@@ -531,8 +523,6 @@ func flattenU32(SliceToWrite []byte, element uint32) int {
 	return 0
 
 }
-
-
 
 //flattenU64 write Int64 into slice and return the write size, 0 is error
 
@@ -564,8 +554,6 @@ func flattenU64(SliceToWrite []byte, element uint64) int {
 
 }
 
-
-
 //flattenInt8 write U8 into slice and return the write size, 0 is error
 
 func flattenInt8(SliceToWrite []byte, element int8) int {
@@ -581,8 +569,6 @@ func flattenInt8(SliceToWrite []byte, element int8) int {
 	return 0
 
 }
-
-
 
 //flattenInt16 write Int16 into slice and return the write size, 0 is error
 
@@ -601,8 +587,6 @@ func flattenInt16(SliceToWrite []byte, element int16) int {
 	return 0
 
 }
-
-
 
 //flattenInt32 write Int32 into slice and return the write size, 0 is error
 
@@ -625,8 +609,6 @@ func flattenInt32(SliceToWrite []byte, element int32) int {
 	return 0
 
 }
-
-
 
 //flattenInt64 write Int64 into slice and return the write size, 0 is error
 
@@ -658,8 +640,6 @@ func flattenInt64(SliceToWrite []byte, element int64) int {
 
 }
 
-
-
 //flattenFloat32 write float32 into slice and return the write size, 0 is error
 
 func flattenFloat32(SliceToWrite []byte, element float32) int {
@@ -683,8 +663,6 @@ func flattenFloat32(SliceToWrite []byte, element float32) int {
 	return 0
 
 }
-
-
 
 //flattenFloat64 write float64 into slice and return the write size, 0 is error
 
@@ -718,8 +696,6 @@ func flattenFloat64(SliceToWrite []byte, element float64) int {
 
 }
 
-
-
 //flatten1DBool write 1d Boold Slice to Bytes and return the write size, 0 is error
 
 func flatten1DBool(SliceToWrite []byte, element []bool, writeSize bool) int {
@@ -743,8 +719,6 @@ func flatten1DBool(SliceToWrite []byte, element []bool, writeSize bool) int {
 	return index
 
 }
-
-
 
 //flatten1DU8 write uint8 into slice and return the write size, 0 is error
 
@@ -770,8 +744,6 @@ func flatten1DU8(SliceToWrite []byte, element []uint8, writeSize bool) int {
 
 }
 
-
-
 //flatten1DInt8 write int8 into slice and return the write size, 0 is error
 
 func flatten1DInt8(SliceToWrite []byte, element []int8, writeSize bool) int {
@@ -795,8 +767,6 @@ func flatten1DInt8(SliceToWrite []byte, element []int8, writeSize bool) int {
 	return index
 
 }
-
-
 
 //flatten1DU16 write uint16 into slice and return the write size, 0 is error
 
@@ -822,8 +792,6 @@ func flatten1DU16(SliceToWrite []byte, element []uint16, writeSize bool) int {
 
 }
 
-
-
 //flatten1DInt16 write int16 into slice and return the write size, 0 is error
 
 func flatten1DInt16(SliceToWrite []byte, element []int16, writeSize bool) int {
@@ -847,8 +815,6 @@ func flatten1DInt16(SliceToWrite []byte, element []int16, writeSize bool) int {
 	return index
 
 }
-
-
 
 //flatten1DU32 write uint32 into slice and return the write size, 0 is error
 
@@ -874,8 +840,6 @@ func flatten1DU32(SliceToWrite []byte, element []uint32, writeSize bool) int {
 
 }
 
-
-
 //flatten1DInt32 write int32 into slice and return the write size, 0 is error
 
 func flatten1DInt32(SliceToWrite []byte, element []int32, writeSize bool) int {
@@ -899,8 +863,6 @@ func flatten1DInt32(SliceToWrite []byte, element []int32, writeSize bool) int {
 	return index
 
 }
-
-
 
 //flatten1DU64 write uint64 into slice and return the write size, 0 is error
 
@@ -926,8 +888,6 @@ func flatten1DU64(SliceToWrite []byte, element []uint64, writeSize bool) int {
 
 }
 
-
-
 //flatten1DInt64 write int64 into slice and return the write size, 0 is error
 
 func flatten1DInt64(SliceToWrite []byte, element []int64, writeSize bool) int {
@@ -951,8 +911,6 @@ func flatten1DInt64(SliceToWrite []byte, element []int64, writeSize bool) int {
 	return index
 
 }
-
-
 
 //flatten1DFloat32 write float32 into slice and return the write size, 0 is error
 
@@ -978,8 +936,6 @@ func flatten1DFloat32(SliceToWrite []byte, element []float32, writeSize bool) in
 
 }
 
-
-
 //flatten1DFloat64 write float64 into slice and return the write size, 0 is error
 
 func flatten1DFloat64(SliceToWrite []byte, element []float64, writeSize bool) int {
@@ -1004,7 +960,53 @@ func flatten1DFloat64(SliceToWrite []byte, element []float64, writeSize bool) in
 
 }
 
+func flatten1DString(SliceToWrite []byte, element []string, writeSize bool) int {
 
+	var index int
+
+	size := len(element)
+
+	if writeSize {
+
+		index += FlattenSize(SliceToWrite, size)
+
+	}
+
+	for _, value := range element {
+
+		index += flattenString(SliceToWrite[index:], value)
+
+	}
+
+	return index
+
+}
+
+func flatten2DString(SliceToWrite []byte, element [][]string) int {
+
+	var index int
+
+	size := len(element)
+
+	index += FlattenSize(SliceToWrite, size) // Write nb array elements
+
+	temp := index
+
+	for i, value := range element {
+
+		index += flatten1DString(SliceToWrite[index:], value, i == 0)
+
+	}
+
+	if temp == index {
+
+		index += FlattenSize(SliceToWrite[index:], 0) // Write nb array elements
+
+	}
+
+	return index
+
+}
 
 func flatten2DBool(SliceToWrite []byte, element [][]bool) int {
 
@@ -1032,8 +1034,6 @@ func flatten2DBool(SliceToWrite []byte, element [][]bool) int {
 
 }
 
-
-
 func flatten2DU8(SliceToWrite []byte, element [][]uint8) int {
 
 	var index int
@@ -1059,8 +1059,6 @@ func flatten2DU8(SliceToWrite []byte, element [][]uint8) int {
 	return index
 
 }
-
-
 
 //flatten2DInt8 write float32 into slice and return the write size, 0 is error
 
@@ -1090,8 +1088,6 @@ func flatten2DInt8(SliceToWrite []byte, element [][]int8) int {
 
 }
 
-
-
 //flatten2DU16 write float32 into slice and return the write size, 0 is error
 
 func flatten2DU16(SliceToWrite []byte, element [][]uint16) int {
@@ -1119,8 +1115,6 @@ func flatten2DU16(SliceToWrite []byte, element [][]uint16) int {
 	return index
 
 }
-
-
 
 //flatten2DInt16 write float32 into slice and return the write size, 0 is error
 
@@ -1150,8 +1144,6 @@ func flatten2DInt16(SliceToWrite []byte, element [][]int16) int {
 
 }
 
-
-
 //flatten2DU32 write uint32 into slice and return the write size, 0 is error
 
 func flatten2DU32(SliceToWrite []byte, element [][]uint32) int {
@@ -1179,8 +1171,6 @@ func flatten2DU32(SliceToWrite []byte, element [][]uint32) int {
 	return index
 
 }
-
-
 
 //flatten2DInt32 write int32 into slice and return the write size, 0 is error
 
@@ -1210,8 +1200,6 @@ func flatten2DInt32(SliceToWrite []byte, element [][]int32) int {
 
 }
 
-
-
 //flatten2DU64 write uint64 into slice and return the write size, 0 is error
 
 func flatten2DU64(SliceToWrite []byte, element [][]uint64) int {
@@ -1239,8 +1227,6 @@ func flatten2DU64(SliceToWrite []byte, element [][]uint64) int {
 	return index
 
 }
-
-
 
 //flatten2DInt64 write int64 into slice and return the write size, 0 is error
 
@@ -1270,8 +1256,6 @@ func flatten2DInt64(SliceToWrite []byte, element [][]int64) int {
 
 }
 
-
-
 //flatten2DFloat32 write float32 into slice and return the write size, 0 is error
 
 func flatten2DFloat32(SliceToWrite []byte, element [][]float32) int {
@@ -1299,8 +1283,6 @@ func flatten2DFloat32(SliceToWrite []byte, element [][]float32) int {
 	return index
 
 }
-
-
 
 //flatten2DFloat64 write float32 into slice and return the write size, 0 is error
 
@@ -1330,8 +1312,6 @@ func flatten2DFloat64(SliceToWrite []byte, element [][]float64) int {
 
 }
 
-
-
 //flattenString flatten string into slice and return the write size, 0 is error
 
 func flattenString(SliceToWrite []byte, element string) int {
@@ -1358,23 +1338,17 @@ func flattenString(SliceToWrite []byte, element string) int {
 
 }
 
-
-
 /**************************************************************************************************/
 
 /* Slice unflatten functions (Big Endian Only)
 
 /**************************************************************************************************/
 
-
-
 func UnflattenSize(SliceToRead []byte) (SliceReaded []byte, element int) {
 
 	var temp uint32
 
 	if len(SliceToRead) >= 4 {
-
-
 
 		temp = uint32(SliceToRead[3])
 
@@ -1392,8 +1366,6 @@ func UnflattenSize(SliceToRead []byte) (SliceReaded []byte, element int) {
 
 }
 
-
-
 func unflattenBool(SliceToRead []byte) (SliceReaded []byte, element bool) {
 
 	if len(SliceToRead) >= 1 {
@@ -1407,8 +1379,6 @@ func unflattenBool(SliceToRead []byte) (SliceReaded []byte, element bool) {
 	return SliceToRead, element
 
 }
-
-
 
 func unflattenU8(SliceToRead []byte) (SliceReaded []byte, element uint8) {
 
@@ -1424,8 +1394,6 @@ func unflattenU8(SliceToRead []byte) (SliceReaded []byte, element uint8) {
 
 }
 
-
-
 func unflattenInt8(SliceToRead []byte) (SliceReaded []byte, element int8) {
 
 	if len(SliceToRead) >= 1 {
@@ -1439,8 +1407,6 @@ func unflattenInt8(SliceToRead []byte) (SliceReaded []byte, element int8) {
 	return SliceToRead, element
 
 }
-
-
 
 func unflattenU16(SliceToRead []byte) (SliceReaded []byte, element uint16) {
 
@@ -1458,8 +1424,6 @@ func unflattenU16(SliceToRead []byte) (SliceReaded []byte, element uint16) {
 
 }
 
-
-
 func unflattenInt16(SliceToRead []byte) (SliceReaded []byte, element int16) {
 
 	if len(SliceToRead) >= 2 {
@@ -1475,8 +1439,6 @@ func unflattenInt16(SliceToRead []byte) (SliceReaded []byte, element int16) {
 	return SliceToRead, element
 
 }
-
-
 
 func unflattenU32(SliceToRead []byte) (SliceReaded []byte, element uint32) {
 
@@ -1498,8 +1460,6 @@ func unflattenU32(SliceToRead []byte) (SliceReaded []byte, element uint32) {
 
 }
 
-
-
 func unflattenInt32(SliceToRead []byte) (SliceReaded []byte, element int32) {
 
 	if len(SliceToRead) >= 4 {
@@ -1519,8 +1479,6 @@ func unflattenInt32(SliceToRead []byte) (SliceReaded []byte, element int32) {
 	return SliceToRead, element
 
 }
-
-
 
 func unflattenInt64(SliceToRead []byte) (SliceReaded []byte, element int64) {
 
@@ -1550,8 +1508,6 @@ func unflattenInt64(SliceToRead []byte) (SliceReaded []byte, element int64) {
 
 }
 
-
-
 func unflattenU64(SliceToRead []byte) (SliceReaded []byte, element uint64) {
 
 	if len(SliceToRead) >= 8 {
@@ -1580,8 +1536,6 @@ func unflattenU64(SliceToRead []byte) (SliceReaded []byte, element uint64) {
 
 }
 
-
-
 func unflattenFloat32(SliceToRead []byte) (SliceReaded []byte, element float32) {
 
 	if len(SliceToRead) >= 4 {
@@ -1603,8 +1557,6 @@ func unflattenFloat32(SliceToRead []byte) (SliceReaded []byte, element float32) 
 	return SliceToRead, element
 
 }
-
-
 
 func unflattenFloat64(SliceToRead []byte) (SliceReaded []byte, element float64) {
 
@@ -1636,8 +1588,6 @@ func unflattenFloat64(SliceToRead []byte) (SliceReaded []byte, element float64) 
 
 }
 
-
-
 func unflatten1DString(SliceToRead []byte, size int) (SliceReaded []byte, element []string) {
 
 	element = make([]string, size)
@@ -1654,8 +1604,6 @@ func unflatten1DString(SliceToRead []byte, size int) (SliceReaded []byte, elemen
 
 }
 
-
-
 func unflatten1DBool(SliceToRead []byte, size int) (SliceReaded []byte, element []bool) {
 
 	element = make([]bool, size)
@@ -1669,8 +1617,6 @@ func unflatten1DBool(SliceToRead []byte, size int) (SliceReaded []byte, element 
 	return SliceToRead, element
 
 }
-
-
 
 func unflatten1DU8(SliceToRead []byte, size int) (SliceReaded []byte, element []uint8) {
 
@@ -1686,8 +1632,6 @@ func unflatten1DU8(SliceToRead []byte, size int) (SliceReaded []byte, element []
 
 }
 
-
-
 func unflatten1DU16(SliceToRead []byte, size int) (SliceReaded []byte, element []uint16) {
 
 	element = make([]uint16, size)
@@ -1701,8 +1645,6 @@ func unflatten1DU16(SliceToRead []byte, size int) (SliceReaded []byte, element [
 	return SliceToRead, element
 
 }
-
-
 
 func unflatten1DU32(SliceToRead []byte, size int) (SliceReaded []byte, element []uint32) {
 
@@ -1718,8 +1660,6 @@ func unflatten1DU32(SliceToRead []byte, size int) (SliceReaded []byte, element [
 
 }
 
-
-
 func unflatten1DU64(SliceToRead []byte, size int) (SliceReaded []byte, element []uint64) {
 
 	element = make([]uint64, size)
@@ -1733,8 +1673,6 @@ func unflatten1DU64(SliceToRead []byte, size int) (SliceReaded []byte, element [
 	return SliceToRead, element
 
 }
-
-
 
 func unflatten1DInt8(SliceToRead []byte, size int) (SliceReaded []byte, element []int8) {
 
@@ -1750,8 +1688,6 @@ func unflatten1DInt8(SliceToRead []byte, size int) (SliceReaded []byte, element 
 
 }
 
-
-
 func unflatten1DInt16(SliceToRead []byte, size int) (SliceReaded []byte, element []int16) {
 
 	element = make([]int16, size)
@@ -1765,8 +1701,6 @@ func unflatten1DInt16(SliceToRead []byte, size int) (SliceReaded []byte, element
 	return SliceToRead, element
 
 }
-
-
 
 func unflatten1DInt32(SliceToRead []byte, size int) (SliceReaded []byte, element []int32) {
 
@@ -1782,8 +1716,6 @@ func unflatten1DInt32(SliceToRead []byte, size int) (SliceReaded []byte, element
 
 }
 
-
-
 func unflatten1DInt64(SliceToRead []byte, size int) (SliceReaded []byte, element []int64) {
 
 	element = make([]int64, size)
@@ -1797,8 +1729,6 @@ func unflatten1DInt64(SliceToRead []byte, size int) (SliceReaded []byte, element
 	return SliceToRead, element
 
 }
-
-
 
 func unflatten1DFloat32(SliceToRead []byte, size int) (SliceReaded []byte, element []float32) {
 
@@ -1814,8 +1744,6 @@ func unflatten1DFloat32(SliceToRead []byte, size int) (SliceReaded []byte, eleme
 
 }
 
-
-
 func unflatten1DFloat64(SliceToRead []byte, size int) (SliceReaded []byte, element []float64) {
 
 	element = make([]float64, size)
@@ -1829,8 +1757,6 @@ func unflatten1DFloat64(SliceToRead []byte, size int) (SliceReaded []byte, eleme
 	return SliceToRead, element
 
 }
-
-
 
 func unflatten2DBool(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]bool) {
 
@@ -1846,8 +1772,6 @@ func unflatten2DBool(SliceToRead []byte, row int, columns int) (SliceReaded []by
 
 }
 
-
-
 func unflatten2DU8(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]uint8) {
 
 	element = make([][]uint8, row)
@@ -1861,8 +1785,6 @@ func unflatten2DU8(SliceToRead []byte, row int, columns int) (SliceReaded []byte
 	return SliceToRead, element
 
 }
-
-
 
 func unflatten2DU16(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]uint16) {
 
@@ -1878,8 +1800,6 @@ func unflatten2DU16(SliceToRead []byte, row int, columns int) (SliceReaded []byt
 
 }
 
-
-
 func unflatten2DU32(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]uint32) {
 
 	element = make([][]uint32, row)
@@ -1893,8 +1813,6 @@ func unflatten2DU32(SliceToRead []byte, row int, columns int) (SliceReaded []byt
 	return SliceToRead, element
 
 }
-
-
 
 func unflatten2DU64(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]uint64) {
 
@@ -1910,8 +1828,6 @@ func unflatten2DU64(SliceToRead []byte, row int, columns int) (SliceReaded []byt
 
 }
 
-
-
 func unflatten2DInt8(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]int8) {
 
 	element = make([][]int8, row)
@@ -1925,8 +1841,6 @@ func unflatten2DInt8(SliceToRead []byte, row int, columns int) (SliceReaded []by
 	return SliceToRead, element
 
 }
-
-
 
 func unflatten2DInt16(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]int16) {
 
@@ -1942,8 +1856,6 @@ func unflatten2DInt16(SliceToRead []byte, row int, columns int) (SliceReaded []b
 
 }
 
-
-
 func unflatten2DInt32(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]int32) {
 
 	element = make([][]int32, row)
@@ -1957,8 +1869,6 @@ func unflatten2DInt32(SliceToRead []byte, row int, columns int) (SliceReaded []b
 	return SliceToRead, element
 
 }
-
-
 
 func unflatten2DInt64(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]int64) {
 
@@ -1974,8 +1884,6 @@ func unflatten2DInt64(SliceToRead []byte, row int, columns int) (SliceReaded []b
 
 }
 
-
-
 func unflatten2DFloat32(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]float32) {
 
 	element = make([][]float32, row)
@@ -1989,8 +1897,6 @@ func unflatten2DFloat32(SliceToRead []byte, row int, columns int) (SliceReaded [
 	return SliceToRead, element
 
 }
-
-
 
 func unflatten2DFloat64(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]float64) {
 
@@ -2006,8 +1912,6 @@ func unflatten2DFloat64(SliceToRead []byte, row int, columns int) (SliceReaded [
 
 }
 
-
-
 func unflattenString(SliceToRead []byte, size int) (SliceReaded []byte, element string) {
 
 	element = string(SliceToRead[:size])
@@ -2018,7 +1922,19 @@ func unflattenString(SliceToRead []byte, size int) (SliceReaded []byte, element 
 
 }
 
+func unflatten2DString(SliceToRead []byte, row int, columns int) (SliceReaded []byte, element [][]string) {
 
+	element = make([][]string, row)
+
+	for i := range element {
+
+		SliceToRead, element[i] = unflatten1DString(SliceToRead, columns)
+
+	}
+
+	return SliceToRead, element
+
+}
 
 /**************************************************************************************************/
 
